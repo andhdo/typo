@@ -24,7 +24,18 @@ class Admin::ContentController < Admin::BaseController
   end
 
   # #region 01 add merge operation #################
-  def merge 
+  def merge
+    
+    
+    ## restrict access
+    #unless @article.access_by? current_user
+    #  redirect_to :action => 'index'
+    #  flash[:error] = _("Error, you are not allowed to perform this action")
+    #  return
+    #end
+    
+    
+     
     local_article01_id = params[:id].to_s()    
     @local_article01 = Article.find_by_id( local_article01_id )
     

@@ -1,5 +1,5 @@
   <!--[#region01 merge ] -->
-  
+<% if current_user.admin? %>  
   <div class=''>
     <h4><%= _("Merge Articles") %></h4>
     <div class=''>
@@ -9,5 +9,6 @@
       	<%= submit_tag( 'Merge', {:id => "merge_submit"} ) %>
       <% end %>
   </div>  
+<% end %>
   <!--[#endregion01] -->
   
