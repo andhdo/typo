@@ -23,6 +23,52 @@ class Admin::ContentController < Admin::BaseController
     end
   end
 
+  # #region 01 add merge operation #################
+  def merge 
+    local_article01_id = params[:id].to_s()    
+    @local_article01 = Article.find_by_id( local_article01_id )
+    
+    local_article02_id = params[:merge_with].to_s()
+    @local_article02 = Article.find_by_id( local_article02_id )
+
+    # apply validations
+    pass_validations = false    
+    if( local_article02_id == nil || local_article02_id.blank?() )
+      flash[:error] = _("Error, Target Article must not be null")
+    elsif( local_article01_id == local_article02_id )
+      flash[:error] = _("Error, Target Article ID to Merge must be different (01=#{local_article01_id})")
+    elsif( not @local_article01 )
+      flash[:error] = _("Error, Source Article ID in Merge Articles does not exist (01=#{local_article01_id})")
+      return
+    elsif( not @local_article02 )
+      flash[:error] = _("Error, Target Article ID in Merge Articles does not exist (02=#{local_article02_id})")
+    else
+      pass_validations = true
+    end
+
+    
+    # process
+    local_article03_id = local_article01_id
+    if( pass_validations )
+      #begin
+        @local_article03 = @local_article01.merge_with(@local_article02.id)
+       local_article03_id = @local_article03.id
+      #rescue => e
+      #  logger.info(e.message)
+      #  nil
+      #end
+    end    
+    
+    #redirect_to(:controller => "admin/content", :action => "edit", :id => @local_article03 , :notice => "articles merged. (01=#{local_article01_id},02=#{local_article02_id},03=#{@local_article03.id})")
+    #redirect_to :back #admin_content_path
+    redirect_to( :action => "edit", :id => local_article03_id , :notice => "articles merged. (01=#{local_article01_id},02=#{local_article02_id},03=#{local_article03_id})")
+    
+    #visit 'admin/content/edit/' + @local_article03.id
+    
+  end
+  
+  # #endregion 01 add merge operation #################
+
   def new
     new_or_edit
   end
