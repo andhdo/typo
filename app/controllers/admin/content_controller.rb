@@ -32,8 +32,10 @@ class Admin::ContentController < Admin::BaseController
     @local_article02 = Article.find_by_id( local_article02_id )
 
     # apply validations
-    pass_validations = false    
-    if( local_article02_id == nil || local_article02_id.blank?() )
+    pass_validations = false
+    if( !current_user.admin? )
+      flash[:error] = _("Only administrators can merge articles.")    
+    elsif( local_article02_id == nil || local_article02_id.blank?() )
       flash[:error] = _("Error, Target Article must not be null")
     elsif( local_article01_id == local_article02_id )
       flash[:error] = _("Error, Target Article ID to Merge must be different (01=#{local_article01_id})")

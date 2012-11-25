@@ -79,7 +79,14 @@ class Article < Content
     local_article02 = Article.find_by_id( local_article02_id )
 
     # build object & merge body     
-    local_article03 = Article.new()
+    merge_in_self = true
+    local_article03 = nil
+    if( merge_in_self )
+       local_article03 = local_article01
+    else
+      local_article03 = Article.new()
+    end
+    
     local_article03.title = local_article01.title
     local_article03.author = local_article01.author
     local_article03.body = local_article01.body + " " + local_article02.body
@@ -109,11 +116,13 @@ class Article < Content
     local_article03.save()
     
     # removesecond articles
-    local_article01 = Article.find_by_id(local_article01_id)
-    local_article01.destroy()
-    
     local_article02 = Article.find_by_id(local_article02_id)
-    local_article02.destroy()
+    local_article02.delete() #destroy()
+
+    unless ( merge_in_self )
+      local_article01 = Article.find_by_id(local_article01_id)
+      local_article01.delete() #destroy()
+    end
     
     local_article03
     
